@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steganography Tool - CheckmateBegins</title>
+    <meta name="description" content="A powerful steganography tool for hiding and extracting secret messages in images.">
+    <meta name="keywords" content="steganography, image encryption, secret messages, data hiding">
+    <meta name="author" content="CheckmateBegins">
+    <meta property="og:title" content="Steganography Tool - CheckmateBegins">
+    <meta property="og:description" content="Hide and extract secret messages in images with our advanced steganography tool.">
+    <meta property="og:image" content="https://begins.site/og-image.jpg">
+    <meta property="og:url" content="https://begins.site/steganography-tool">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #bb86fc;
+            --primary-variant: #3700b3;
+            --secondary: #03dac6;
+            --background: #121212;
+            --surface: #1e1e1e;
+            --error: #cf6679;
+            --on-primary: #000000;
+            --on-background: #ffffff;
+            --on-surface: #ffffff;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--on-background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .nav {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            color: var(--on-background);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .nav-back {
+            color: var(--secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .nav-back:hover {
+            background-color: rgba(3, 218, 198, 0.1);
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            margin-top: 80px;
+            text-align: center;
+        }
+        h1, h2 {
+            color: var(--on-background);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        .section {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .file-input-wrapper {
+            margin: 1rem 0;
+        }
+        .file-input-button {
+            background-color: var(--surface);
+            color: var(--on-background);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .file-input-button:hover {
+            background-color: var(--primary);
+            color: var(--on-primary);
+        }
+        .file-input-wrapper input[type=file] {
+            display: none;
+        }
+        .file-name {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--on-background);
+            border: 2px solid var(--surface);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(187,134,252,0.2);
+        }
+        button {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+        button:hover {
+            background-color: var(--primary-variant);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(187,134,252,0.2);
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1.5rem auto;
+            display: block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        #downloadLink {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--secondary);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        #downloadLink:hover {
+            background-color: rgba(3, 218, 198, 0.1);
+        }
+        .loading {
+            display: none;
+            margin: 1.5rem 0;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        .copyright {
+            margin-top: auto;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--on-background);
+            opacity: 0.7;
+        }
+        .copyright a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .copyright a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="https://Begins.site" class="nav-logo">CheckmateBegins</a>
+            <a href="https://Begins.site" class="nav-back">Back to Homepage</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="fade-in">Steganography Tool</h1>
+        
+        <div class="section fade-in">
+            <h2>Hide Message</h2>
+            <div class="file-input-wrapper">
+                <label class="file-input-button">
+                    Choose Image
+                    <input type="file" id="imageInput" accept="image/*">
+                </label>
+                <div id="imageFileName" class="file-name"></div>
+            </div>
+            <textarea id="secretMessage" rows="4" placeholder="Enter your secret message here"></textarea>
+            <button onclick="hideMessage()">Hide Message</button>
+            <div class="loading" id="hideLoading"></div>
+            <img id="imagePreview" alt="Image Preview" style="display: none;">
+            <a id="downloadLink" style="display: none;">Download Steganographic Image</a>
+        </div>
+
+        <div class="section fade-in">
+            <h2>Extract Message</h2>
+            <div class="file-input-wrapper">
+                <label class="file-input-button">
+                    Choose Image
+                    <input type="file" id="extractImageInput" accept="image/*">
+                </label>
+                <div id="extractImageFileName" class="file-name"></div>
+            </div>
+            <button onclick="extractMessage()">Extract Message</button>
+            <div class="loading" id="extractLoading"></div>
+            <textarea id="extractedMessage" rows="4" readonly placeholder="Extracted message will appear here"></textarea>
+            <img id="extractedImagePreview" alt="Extracted Image Preview" style="display: none;">
+        </div>
+
+        <div class="section fade-in">
+            <h2>About Steganography</h2>
+            <p>Steganography is the art and science of hiding information within other seemingly innocent files or messages. This ancient practice has evolved into a sophisticated digital technique, crucial in the realms of cybersecurity and data privacy.</p>
+            <h3>How Our Tool Works</h3>
+            <p>This steganography tool employs the Least Significant Bit (LSB) technique to embed secret messages within image files:</p>
+            <ul>
+                <li><strong>Encoding:</strong> The tool converts your message into binary and subtly alters the least significant bits of the image's pixel data to store this information.</li>
+                <li><strong>Decoding:</strong> To extract the hidden message, the tool reads these least significant bits, reconstructing the original message.</li>
+            </ul>
+            <h3>Applications of Steganography</h3>
+            <p>Steganography finds legitimate use in various fields:</p>
+            <ul>
+                <li>Digital Watermarking for copyright protection</li>
+                <li>Secure Communication in sensitive environments</li>
+                <li>Enhancing data privacy in storage and transmission</li>
+            </ul>
+            <p><strong>Note:</strong> While steganography can be a powerful tool for privacy, it's crucial to use such technologies responsibly and in compliance with applicable laws and regulations.</p>
+        </div>
+
+        <div class="copyright fade-in">
+            &copy; 2023 <a href="https://Begins.site" target="_blank">CheckmateBegins</a>. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        let originalImage;
+        let extractImage;
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            handleImageInput(e, 'imagePreview', 'imageFileName');
+            originalImage = document.getElementById('imagePreview');
+        });
+
+        document.getElementById('extractImageInput').addEventListener('change', function(e) {
+            handleImageInput(e, 'extractedImagePreview', 'extractImageFileName');
+            extractImage = document.getElementById('extractedImagePreview');
+        });
+
+        function handleImageInput(e, previewId, fileNameId) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const preview = document.getElementById(previewId);
+                        preview.src = img.src;
+                        preview.style.display = 'block';
+                        preview.classList.add('fade-in');
+                    }
+                    img.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+                document.getElementById(fileNameId).textContent = file.name;
+            }
+        }
+
+        function hideMessage() {
+            const message = document.getElementById('secretMessage').value;
+            if (!originalImage || !message) {
+                alert('Please select an image and enter a message.');
+                return;
+            }
+
+            document.getElementById('hideLoading').style.display = 'block';
+
+            setTimeout(() => {
+                const canvas = document.createElement('canvas');
+                canvas.width = originalImage.width;
+                canvas.height = originalImage.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(originalImage, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+
+                const binaryMessage = message.split('').map(char => 
+                    char.charCodeAt(0).toString(2).padStart(8, '0')
+                ).join('') + '00000000';
+
+                let messageIndex = 0;
+                for (let i = 0; i < data.length; i += 4) {
+                    if (messageIndex < binaryMessage.length) {
+                        data[i] = (data[i] & 254) | parseInt(binaryMessage[messageIndex]);
+                        messageIndex++;
+                    } else {
+                        break;
+                    }
+                }
+
+                ctx.putImageData(imageData, 0, 0);
+
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = canvas.toDataURL('image/png');
+                downloadLink.download = 'steganographic_image.png';
+                downloadLink.style.display = 'inline-block';
+                downloadLink.textContent = 'Download Steganographic Image';
+                downloadLink.classList.add('fade-in');
+
+                document.getElementById('hideLoading').style.display = 'none';
+            }, 100);
+        }
+
+        function extractMessage() {
+            if (!extractImage) {
+                alert('Please select an image to extract the message from.');
+                return;
+            }
+
+            document.getElementById('extractLoading').style.display = 'block';
+
+            setTimeout(() => {
+                const canvas = document.createElement('canvas');
+                canvas.width = extractImage.width;
+                canvas.height = extractImage.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(extractImage, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+
+                let binaryMessage = '';
+                for (let i = 0; i < data.length; i += 4) {
+                    binaryMessage += data[i] & 1;
+                    if (binaryMessage.length % 8 === 0 && binaryMessage.slice(-8) === '00000000') {
+                        break;
+                    }
+                }
+
+                const message = binaryMessage.match(/.{8}/g).slice(0, -1).map(byte => 
+                    String.fromCharCode(parseInt(byte, 2))
+                ).join('');
+
+                const extractedMessageElement = document.getElementById('extractedMessage');
+                extractedMessageElement.value = message;
+                extractedMessageElement.classList.add('fade-in');
+
+                document.getElementById('extractLoading').style.display = 'none';
+            }, 100);
+        }
+    </script>
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', event => {
+            if (event.ctrlKey && (event.key === 'c' || event.key === 'u' || event.key === 's')) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
