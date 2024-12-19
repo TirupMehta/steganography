@@ -18,17 +18,17 @@ The **Steganography Tool** by CheckmateBegins enables users to securely encode m
 
 ## Getting Started  
 To use the Steganography Tool, follow these steps:
-1. Visit [https://Begins.site/steganography-tool/](https://Begins.site/steganography-tool/).
+1. Visit [https://Begins.site/projects/steganography-tool/](https://Begins.site/projects/steganography-tool/).
 2. Follow on-screen instructions to upload images and encode/decode messages.
 
 ## How to Use  
 ### Encoding a Message  
-1. Visit the [Steganography Tool](https://Begins.site/steganography-tool/).
+1. Visit the [Steganography Tool](https://Begins.site/projects/steganography-tool/).
 2. Upload your image and enter the message you wish to encode.
 3. Click **Encode** to create a secure image.
 
 ### Decoding a Message  
-1. Access the [Steganography Tool](https://Begins.site/steganography-tool/).
+1. Access the [Steganography Tool](https://Begins.site/projects/steganography-tool/).
 2. Upload the image containing the message.
 3. Click **Decode** to reveal the hidden content.
 
